@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       libmysqlclient-dev \
       libsqlite3-0 \
       libxml2 \
+      libpq5 \
+      libpq-dev \
     && apt-get clean \
     && rm -r /var/lib/apt/lists/*
 
@@ -83,6 +85,9 @@ RUN buildDeps=" \
             --with-readline \
             --with-recode \
             --with-zlib \
+            --enable-pcntl \
+            --with-pgsql \
+            --with-pdo-pgsql \
       && make -j"$(nproc)" \
       && make install \
       && { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
@@ -129,6 +134,9 @@ RUN set -ex \
 
 # fix some weird corruption in this file
 RUN sed -i -e "" /usr/local/etc/php-fpm.d/www.conf
+
+RUN pecl install channel://pecl.php.net/proctitle-0.1.2 \
+ && echo "extension=proctitle.so" > /usr/local/etc/php/conf.d/proctitle.ini
 
 EXPOSE 9000
 CMD ["php-fpm"]
