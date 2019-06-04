@@ -77,7 +77,7 @@ RUN buildDeps=" \
             --enable-fpm \
             --with-fpm-user=www-data \
             --with-fpm-group=www-data \
-            --disable-cgi \
+            --enable-cgi \
             --enable-mysqlnd \
             --with-mysql \
             --with-curl \
@@ -88,6 +88,7 @@ RUN buildDeps=" \
             --enable-pcntl \
             --with-pgsql \
             --with-pdo-pgsql \
+            --enable-mbstring \
       && make -j"$(nproc)" \
       && make install \
       && { find /usr/local/bin /usr/local/sbin -type f -executable -exec strip --strip-all '{}' + || true; } \
